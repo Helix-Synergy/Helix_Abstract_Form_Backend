@@ -1,22 +1,29 @@
 const multer = require("multer");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-// Storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+// Storage config for Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    let folderPath = "helix_forms";
+    
     if (file.fieldname === "photo") {
-      cb(null, "uploads/photos/");
+      folderPath = "helix/photos";
     } else if (file.fieldname === "abstract") {
-      cb(null, "uploads/abstracts/");
+      folderPath = "helix/abstracts";
     } else if (file.fieldname === "biography") {
-      cb(null, "uploads/bios/");
+      folderPath = "helix/bios";
     }
+
+    return {
+      folder: folderPath,
+      resource_type: "auto", // Supports PDF, DOCX, etc.
+      public_id: Date.now() + "-" + file.originalname.split(".")[0],
+    };
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
 });
 
 const upload = multer({ storage });
 
-module.exports = upload;
+module.exports = upload;
