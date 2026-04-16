@@ -30,7 +30,7 @@ exports.submitForm = async (req, res) => {
 
     // Upload all three files in parallel for speed
     const [photoFile, abstractFile, bioFile] = await Promise.all([
-      uploadFile(req.files, "photo", "helix/photos", "image"),
+      uploadFile(req.files, "photo", "helix/photos", "auto"),
       uploadFile(req.files, "abstract", "helix/abstracts", "auto"),
       uploadFile(req.files, "biography", "helix/bios", "auto"),
     ]);
