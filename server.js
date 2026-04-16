@@ -8,18 +8,17 @@ connectDB();
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors({
-  origin: "*",           // allow all origins; restrict to your frontend domain in production
+  origin: "*", // Restrict to your frontend domain in production
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-// Routes
 app.use("/api/forms", require("./routes/routes"));
 
+// FIX: Use the PORT variable (fallback 5000), not process.env.PORT directly
 const PORT = process.env.PORT || 5000;
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

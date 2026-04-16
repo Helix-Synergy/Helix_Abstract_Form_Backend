@@ -1,29 +1,24 @@
 const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../config/cloudinary");
 
-// Storage config for Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    let folderPath = "helix_forms";
-    
-    if (file.fieldname === "photo") {
-      folderPath = "helix/photos";
-    } else if (file.fieldname === "abstract") {
-      folderPath = "helix/abstracts";
-    } else if (file.fieldname === "biography") {
-      folderPath = "helix/bios";
+// Use memory storage — no disk, no temp files, works on all deployment platforms
+const storage = multer.memoryStorage();
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB per file
+  fileFilter: (req, file, cb) => {
+    const allowed = [
+      "image/jpeg", "image/png", "image/jpg", "image/webp",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    if (allowed.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`File type not allowed: ${file.mimetype}`), false);
     }
-
-    return {
-      folder: folderPath,
-      resource_type: "auto", // Supports PDF, DOCX, etc.
-      public_id: Date.now() + "-" + file.originalname.split(".")[0],
-    };
-  },
+  }
 });
 
-const upload = multer({ storage });
-
-module.exports = upload;
+module.exports = upload;
