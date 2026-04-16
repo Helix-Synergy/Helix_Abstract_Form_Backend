@@ -20,6 +20,6 @@ app.use(cors({
 app.use("/api/forms", require("./routes/routes"));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
+});
