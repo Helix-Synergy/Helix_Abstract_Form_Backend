@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const fileSchema = {
+  url: { type: String, default: null },
+  public_id: { type: String, default: null },
+};
+
 const formSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
@@ -8,9 +13,9 @@ const formSchema = new mongoose.Schema({
   country: String,
   tracks: String,
 
-  photo: String,
-  abstract: String,
-  biography: String
+  photo: { type: fileSchema, default: () => ({}) },
+  abstract: { type: fileSchema, default: () => ({}) },
+  biography: { type: fileSchema, default: () => ({}) },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Form", formSchema);

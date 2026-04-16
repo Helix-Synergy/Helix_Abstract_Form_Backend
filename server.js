@@ -7,17 +7,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
- 
+
 // Middleware
 app.use(express.json());
-app.use(cors());
-
-// Static folder (important for file access)
-app.use("/uploads", express.static("uploads"));
+app.use(cors({
+  origin: "*",           // allow all origins; restrict to your frontend domain in production
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
 // Routes
 app.use("/api/forms", require("./routes/routes"));
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
